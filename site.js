@@ -119,6 +119,22 @@
   if(moving&&!document.hidden)sceneFrame=requestAnimationFrame(scene);else lastSceneTime=0;
  }
  function requestScene(){if(!sceneFrame)sceneFrame=requestAnimationFrame(scene);}
+ function scrollImmediately(top){
+  const root=document.documentElement,previous=root.style.scrollBehavior;
+  root.style.scrollBehavior='auto';
+  window.scrollTo({top,behavior:'auto'});
+  root.style.scrollBehavior=previous;
+ }
+ viewport?.addEventListener('wheel',event=>{
+  if(reduced.matches||!travel||event.ctrlKey||Math.abs(event.deltaX)<=Math.abs(event.deltaY))return;
+  const start=gallery.getBoundingClientRect().top+scrollY;
+  const unit=event.deltaMode===1?16:event.deltaMode===2?viewport.clientWidth:1;
+  const current=clamp((scrollY-start)/scrollTravel);
+  const next=clamp(current+event.deltaX*unit/travel);
+  if(next===current)return;
+  event.preventDefault();scrollImmediately(start+next*scrollTravel);requestScene();
+ },{passive:false});
+ viewport?.addEventListener('dragstart',event=>event.preventDefault());
  function goToCard(index,behavior='smooth'){
   if(!gallery||!activeCards.length)return;
   const i=clamp(index,0,activeCards.length-1),ratio=activeCards.length>1?i/(activeCards.length-1):0;
@@ -151,7 +167,7 @@
   if(!drag||!travel)return;
   const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
   if(!drag.active&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)*1.2){drag.active=true;viewport.setPointerCapture(event.pointerId);viewport.classList.add('is-dragging');}
-  if(drag.active){event.preventDefault();window.scrollTo({top:drag.start-dx/travel*scrollTravel,behavior:'instant'});suppressClick=true;}
+  if(drag.active){event.preventDefault();scrollImmediately(drag.start-dx/travel*scrollTravel);requestScene();suppressClick=true;}
  },{passive:false});
  function endDrag(){if(drag?.active){viewport.classList.remove('is-dragging');setTimeout(()=>{suppressClick=false;},0);}drag=null;}
  viewport?.addEventListener('pointerup',endDrag);viewport?.addEventListener('pointercancel',endDrag);
