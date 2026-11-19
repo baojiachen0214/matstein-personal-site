@@ -154,6 +154,11 @@
  // Touch and trackpads use native scrolling. Mouse dragging starts only after
  // a deliberate horizontal gesture, so an ordinary link click stays a click.
  let drag=null,suppressedClick=null;
+ function cancelDrag(){
+  const ended=drag;drag=null;
+  viewport?.classList.remove('is-dragging');
+  if(ended&&viewport?.hasPointerCapture(ended.id))viewport.releasePointerCapture(ended.id);
+ }
  viewport?.addEventListener('dragstart',event=>event.preventDefault());
  viewport?.addEventListener('pointerdown',event=>{
   suppressedClick=null;
@@ -162,6 +167,7 @@
  },{passive:true});
  viewport?.addEventListener('pointermove',event=>{
   if(!drag||event.pointerId!==drag.id)return;
+  if(!(event.buttons&1)){cancelDrag();return;}
   const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
   if(!drag.active&&Math.abs(dy)>10&&Math.abs(dy)>Math.abs(dx)){drag=null;return;}
   if(!drag.active&&Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy)*1.4){
@@ -183,6 +189,11 @@
  }
  viewport?.addEventListener('pointerup',endDrag);
  viewport?.addEventListener('pointercancel',endDrag);
+ // Before capture starts, a release can occur outside the viewport. A blurred
+ // window may miss that release entirely; neither case leaves an armed drag.
+ addEventListener('pointerup',endDrag);
+ addEventListener('pointercancel',endDrag);
+ addEventListener('blur',()=>{cancelDrag();suppressedClick=null;});
  viewport?.addEventListener('lostpointercapture',event=>{
   if(drag?.id===event.pointerId){drag=null;viewport.classList.remove('is-dragging');}
  });

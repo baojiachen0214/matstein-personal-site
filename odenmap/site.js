@@ -76,7 +76,8 @@ const messages = {
     "arcStructure": "Structure & evidence",
     "arcResult": "OdenMap document",
     "supportLine": "Have a question or something to share?",
-    "supportAction": "Visit support"
+    "supportAction": "Visit support",
+    "exportPreviewToggle": "Expand or collapse the example branch"
   },
   "zh": {
     "skip": "跳到正文",
@@ -153,7 +154,8 @@ const messages = {
     "arcStructure": "结构与来源",
     "arcResult": "OdenMap 文稿",
     "supportLine": "想了解更多，或反馈一个问题？",
-    "supportAction": "查看使用与支持"
+    "supportAction": "查看使用与支持",
+    "exportPreviewToggle": "展开或折叠示例分支"
   }
 };
 
