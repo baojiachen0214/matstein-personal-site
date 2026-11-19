@@ -49,10 +49,17 @@
       <a class="head-support" href="/odenmap/en/support.html">Support</a>
       <a class="head-privacy" href="/odenmap/en/privacy.html">Privacy</a>
       <a class="lang" href="/odenmap/performance.html?lang=zh" hreflang="zh-CN" lang="zh-CN" aria-label="切换到简体中文">中文</a>
-      <button class="theme-btn" type="button" data-theme-toggle aria-label="Switch to dark appearance" data-label-dark="Switch to dark appearance" data-label-light="Switch to light appearance">
-        <span class="theme-icon theme-sun"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg></span>
-        <span class="theme-icon theme-moon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 15.2A8.2 8.2 0 0 1 8.8 4 8.4 8.4 0 1 0 20 15.2Z"/></svg></span>
-      </button>
+      <div class="theme-wrap">
+        <button class="theme-btn" type="button" data-theme-toggle aria-label="Appearance" aria-haspopup="true" aria-expanded="false" data-label-theme="Appearance" data-label-system="System" data-label-light="Light" data-label-dark="Dark">
+          <span class="theme-icon theme-sun"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg></span>
+          <span class="theme-icon theme-moon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 15.2A8.2 8.2 0 0 1 8.8 4 8.4 8.4 0 1 0 20 15.2Z"/></svg></span>
+        </button>
+        <div class="theme-menu" data-theme-menu role="group" aria-label="Appearance" hidden>
+          <button type="button" data-theme-choice="system" aria-pressed="false"><span>System</span><i aria-hidden="true"></i></button>
+          <button type="button" data-theme-choice="light" aria-pressed="false"><span>Light</span><i aria-hidden="true"></i></button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false"><span>Dark</span><i aria-hidden="true"></i></button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
