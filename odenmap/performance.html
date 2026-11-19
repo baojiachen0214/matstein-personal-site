@@ -1,9 +1,90 @@
 <!doctype html>
-<html lang="en" data-lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Test notes — OdenMap</title><meta property="og:type" content="website"><meta property="og:url" content="https://www.matstein.top/odenmap/performance.html"><meta name="robots" content="index,follow,max-image-preview:large"><meta name="twitter:card" content="summary_large_image"><link rel="canonical" href="https://www.matstein.top/odenmap/performance.html"><meta name="description" content="OdenMap historical developer test notes and their scope."><meta name="theme-color" content="#f8f8f5"><meta name="color-scheme" content="light dark"><meta property="og:title" content="Test notes — OdenMap"><meta property="og:description" content="OdenMap historical developer test notes and their scope."><meta property="og:image" content="https://www.matstein.top/odenmap/assets/canvas-light.webp"><meta property="og:image:width" content="2305"><meta property="og:image:height" content="925">
-<link rel="icon" href="/odenmap/assets/icon.png"><link rel="stylesheet" href="/odenmap/styles.css?v=20261119r2"><script defer src="/odenmap/site.js?v=20261119r2"></script><script src="/odenmap/theme-init.js?v=20261119r2"></script></head>
-<body class="document-page"><a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
-<header class="site-header"><div class="header-inner"><a class="brand" href="/odenmap/" data-local><img src="/odenmap/assets/icon.png" alt="" width="30" height="30"><span>OdenMap</span></a><nav class="desktop-nav" aria-label="Main navigation"><a href="/odenmap/#features" data-local data-i18n="navFeatures">Features</a><a href="/odenmap/#open-source" data-local>Oden ARC</a><a href="/odenmap/support.html" data-local data-i18n="support">Support</a></nav><div class="header-controls"><button class="language-control" id="language-switch" type="button" aria-label="切换到简体中文">中文</button><details class="appearance"><summary aria-label="Appearance"><svg class="" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17Z" fill="currentColor" stroke="none"/></svg></summary><div class="appearance-menu"><span data-i18n="appearance">Appearance</span><button type="button" data-theme-choice="system" data-i18n="system">System</button><button type="button" data-theme-choice="light" data-i18n="light">Light</button><button type="button" data-theme-choice="dark" data-i18n="dark">Dark</button></div></details></div></div></header><main id="main" class="prose wrap"><div class="eyebrow">OdenMap / <span lang="en">Test notes</span><span lang="zh-Hans">性能记录</span></div><h1><span lang="en">Numbers, with their context.</span><span lang="zh-Hans">数字，也需要上下文。</span></h1><p class="date"><span lang="en">Internal test records: October 9–12, 2026</span><span lang="zh-Hans">内部测试记录：2026 年 10 月 9–12 日</span></p><p><span lang="en">These results describe specific development checks, not an independent benchmark or a promise for every Mac and document. Resources, text complexity, zoom level, and visible node count affect the experience.</span><span lang="zh-Hans">这些结果来自特定开发检查，并非独立评测，也不是对每台 Mac、每份文稿的承诺。资源、文字复杂度、缩放和可见节点数都会影响体验。</span></p>
-<h2><span lang="en">20,000-level structural checks</span><span lang="zh-Hans">两万层结构检查</span></h2><p><span lang="en">A chain with 20,000 levels was checked for finite coordinates, complete node counts, branch moves, structure changes, and undo/redo equivalence. The October 12 record contains 20,011 structural assertions. A separate native-window check verified that focusing far down the chain and reversing the layout retained visible nodes.</span><span lang="zh-Hans">两万层深链检查覆盖坐标有效性、节点完整性、分支移动、结构改变及撤销/重做一致性。10 月 12 日记录包含 20,011 项结构断言；另有原生窗口检查，验证远处聚焦和反向布局后仍有节点可见。</span></p><p class="notice"><span lang="en">This does not mean 20,000 nodes render smoothly at once. A dense full-map view still has noticeable delays.</span><span lang="zh-Hans">这不意味着两万节点同时显示仍然流畅。密集全景视野仍有明显延迟。</span></p>
-<h2><span lang="en">Long-topic loading: about 52% less time</span><span lang="zh-Hans">长主题加载耗时降低约 52%</span></h2><p><span lang="en">On an Apple M5 Pro with 24 GiB memory and macOS 27.0.1, optimized test binaries used identical test scheduling and three independent before/after runs, taking medians. A long-topic loading scenario in a 1,000-node document with 5,000 source paragraphs changed from 1,344.653 ms to 642.035 ms, a reduction of approximately 52.3% versus the earlier implementation. It is a local loading-call measurement, not key-to-screen latency.</span><span lang="zh-Hans">使用 Apple M5 Pro、24 GiB 内存、macOS 27.0.1；优化测试程序采用相同调度，运行三组独立前后对照并取中位数。1,000 节点文稿中的 5,000 源段落长主题加载，由 1,344.653 ms 降至 642.035 ms，较此前实现降低约 52.3%。这是本地加载调用耗时，不是按键到屏幕的延迟。</span></p><p><span lang="en">In a separate 10,000-node / 5,000-paragraph scenario, combined store initialization and native editor creation changed from 1,924.269 ms to 1,105.765 ms, approximately 42.5% less time. First editing and paragraph splitting at this text size still exceed a 10 ms target.</span><span lang="zh-Hans">另一组 10,000 节点 / 5,000 段落场景中，文稿初始化与原生编辑器创建合计由 1,924.269 ms 降至 1,105.765 ms，降低约 42.5%。此文字规模的首次编辑和段落拆分仍未达到 10 ms 目标。</span></p>
-<h2><span lang="en">Dense drawing remains a work in progress</span><span lang="zh-Hans">密集绘制仍在优化</span></h2><p><span lang="en">The October 12 CPU raster-output test used a 1,200 × 800 non-Retina canvas, 20 frames, and four warm-up frames. It includes background, grid, drawing, and ImageRenderer output; it is not physical-screen FPS or touch-event latency.</span><span lang="zh-Hans">10 月 12 日 CPU 栅格输出测试采用 1,200 × 800 非 Retina 画布、20 帧、前 4 帧预热，包含背景、网格、绘制和 ImageRenderer 输出；不等于物理屏幕 FPS 或触控事件延迟。</span></p><div class="table-scroll"><table><thead><tr><th><span lang="en">Scenario</span><span lang="zh-Hans">场景</span></th><th><span lang="en">Earlier → checkpoint</span><span lang="zh-Hans">此前 → 检查点</span></th></tr></thead><tbody><tr><td><span lang="en">20,000 nodes, dense full-view pan</span><span lang="zh-Hans">两万节点，密集全景平移</span></td><td>701.74 → 393.37 ms</td></tr><tr><td><span lang="en">20,000 nodes, dense full-view zoom</span><span lang="zh-Hans">两万节点，密集全景缩放</span></td><td>749.26 → 419.81 ms</td></tr><tr><td><span lang="en">10,000 nodes, 188 visible, pan</span><span lang="zh-Hans">万节点，188 个可见，平移</span></td><td>6.36 → 5.45 ms</td></tr></tbody></table></div><p><span lang="en">These are historical optimization checkpoints, not a specification of the final App Store build. Development continues. Memory lifecycle checks have improved, but these limited checks do not exclude every intermittent memory-growth case.</span><span lang="zh-Hans">以上是历史优化检查点，不是最终 App Store 构建的性能规格。优化仍在继续。内存生命周期检查已有改善，但有限测试不足以排除所有间歇性内存增长情况。</span></p></main><footer class="site-footer wrap"><div class="footer-main"><a class="brand" href="/odenmap/" data-local><img src="/odenmap/assets/icon.png" width="28" height="28" alt=""><span>OdenMap</span></a><p data-i18n="footerLine" >Ideas, sources and connections.</p></div><div class="footer-bottom"><span>© 2026 Jiachen Bao</span><nav aria-label="Footer"><a data-home href="/">MatStein</a><a href="/odenmap/support.html" data-local data-i18n="support">Support</a><a href="/odenmap/privacy.html" data-local data-i18n="privacy">Privacy</a><a href="/odenmap/performance.html" data-local data-i18n="testNotes">Test notes</a><a href="https://github.com/baojiachen0214/oden-arc" data-i18n="openSource">Open source</a></nav><a class="filing-link" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">浙ICP备2026100936号</a></div></footer></body></html>
+<html lang="zh-CN" data-page="performance.html">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>测试记录 — OdenMap</title>
+<meta name="description" content="OdenMap 的内部性能与结构检查记录：两万层结构、长主题加载与密集绘制，含测试条件与限制。">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7f4ef">
+<meta name="format-detection" content="telephone=no">
+<link rel="canonical" href="https://www.matstein.top/odenmap/performance.html">
+<link rel="alternate" hreflang="zh-CN" href="https://www.matstein.top/odenmap/performance.html">
+<link rel="alternate" hreflang="en" href="https://www.matstein.top/odenmap/en/performance.html">
+<link rel="alternate" hreflang="x-default" href="https://www.matstein.top/odenmap/performance.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="OdenMap">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:url" content="https://www.matstein.top/odenmap/performance.html">
+<meta property="og:title" content="测试记录 — OdenMap">
+<meta property="og:description" content="OdenMap 的内部性能与结构检查记录：两万层结构、长主题加载与密集绘制，含测试条件与限制。">
+<meta property="og:image" content="https://www.matstein.top/odenmap/assets/odenverse-canvas-zh-light.webp">
+<meta property="og:image:width" content="2160">
+<meta property="og:image:height" content="1344">
+<meta property="og:image:alt" content="OdenMap 的 macOS 工作空间，主题、资料、公式与关系在同一张画布上">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="测试记录 — OdenMap">
+<meta name="twitter:description" content="OdenMap 的内部性能与结构检查记录：两万层结构、长主题加载与密集绘制，含测试条件与限制。">
+<meta name="twitter:image" content="https://www.matstein.top/odenmap/assets/odenverse-canvas-zh-light.webp">
+<meta name="twitter:image:alt" content="OdenMap 的 macOS 工作空间，主题、资料、公式与关系在同一张画布上">
+<link rel="icon" href="/odenmap/assets/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="/odenmap/assets/icon.png">
+<script src="/odenmap/theme-init.js?v=20261119e"></script>
+<link rel="stylesheet" href="/odenmap/styles.css?v=20261119e">
+<script defer src="/odenmap/site.js?v=20261119e"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","@id":"https://www.matstein.top/odenmap/performance.html#webpage","url":"https://www.matstein.top/odenmap/performance.html","name":"测试记录 — OdenMap","description":"OdenMap 的内部性能与结构检查记录：两万层结构、长主题加载与密集绘制，含测试条件与限制。","inLanguage":"zh-CN","isPartOf":{"@id":"https://www.matstein.top/#website"},"about":{"@id":"https://www.matstein.top/odenmap/#app"}},{"@type":"SoftwareApplication","@id":"https://www.matstein.top/odenmap/#app","name":"OdenMap","url":"https://www.matstein.top/odenmap/","applicationCategory":"ProductivityApplication","operatingSystem":["macOS","iOS"],"installUrl":"https://testflight.apple.com/join/yeJwCNAr","contactPoint":{"@type":"ContactPoint","email":"odenmap_support@yeah.net","contactType":"customer support"}},{"@type":"Person","@id":"https://www.matstein.top/#person","name":"Jiachen Bao","alternateName":"MatStein","url":"https://www.matstein.top/"},{"@type":"WebSite","@id":"https://www.matstein.top/#website","name":"MatStein","url":"https://www.matstein.top/","inLanguage":["zh-CN","en"],"author":{"@id":"https://www.matstein.top/#person"}}]}</script>
+</head>
+<body class="page-doc">
+<a class="skip" href="#main">跳到正文</a>
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="brand" href="/odenmap/" aria-label="OdenMap 首页">
+      <img src="/odenmap/assets/icon.png" alt="" width="26" height="26">
+      <span>OdenMap</span>
+    </a>
+    <div class="head-tools">
+      <a class="head-support" href="/odenmap/support.html">支持</a>
+      <a class="head-privacy" href="/odenmap/privacy.html">隐私</a>
+      <a class="lang" href="/odenmap/en/performance.html" hreflang="en" lang="en" aria-label="Switch to English">EN</a>
+      <button class="theme-btn" type="button" data-theme-toggle aria-label="切换到深色外观" data-label-dark="切换到深色外观" data-label-light="切换到浅色外观">
+        <span class="theme-icon theme-sun"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg></span>
+        <span class="theme-icon theme-moon"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 15.2A8.2 8.2 0 0 1 8.8 4 8.4 8.4 0 1 0 20 15.2Z"/></svg></span>
+      </button>
+    </div>
+  </div>
+</header>
+<main id="main">
+<header class="doc-head wrap">
+  <a class="doc-back" href="/odenmap/"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>返回 OdenMap</span></a>
+  <p class="eyebrow">测试记录 / TEST NOTES</p>
+  <h1>数字，也需要上下文。</h1>
+  <p class="doc-lead">这些结果来自特定开发检查，不是独立评测，也不是对每台设备或每份文稿的承诺。资源、文字复杂度、缩放与可见节点数都会影响体验。</p>
+  <p class="doc-updated">内部测试记录：2026 年 10 月 9–12 日</p>
+</header>
+<article class="doc prose wrap">
+  <section class="prose-section">
+          <h2>两万层结构检查</h2>
+          <p>一条包含 20,000 层的链检查了坐标有效性、节点完整性、分支移动、结构改变与撤销/重做一致性。10 月 12 日的记录包含 20,011 项结构断言。另一项原生窗口检查验证了聚焦远处节点和反向布局后仍有可见节点。</p><p>这不意味着两万节点同时显示仍然流畅。密集全景视野仍有明显延迟。</p>
+        </section><section class="prose-section">
+          <h2>长主题加载耗时降低约 52%</h2>
+          <p>在 Apple M5 Pro、24 GiB 内存、macOS 27.0.1 上，优化测试程序采用相同调度，运行三组独立前后对照并取中位数。1,000 节点文稿中的 5,000 源段落长主题加载，由 1,344.653 ms 降至 642.035 ms，降低约 52.3%。这是本地加载调用耗时，不是按键到屏幕的延迟。</p><p>另一组 10,000 节点 / 5,000 段落场景中，文稿初始化与原生编辑器创建合计由 1,924.269 ms 降至 1,105.765 ms，降低约 42.5%。此文字规模的首次编辑与段落拆分仍未达到 10 ms 目标。</p>
+        </section><section class="prose-section">
+          <h2>密集绘制仍在优化</h2>
+          <p>10 月 12 日的 CPU 栅格输出测试采用 1,200 × 800 非 Retina 画布、20 帧、前 4 帧预热，包含背景、网格、绘制与 ImageRenderer 输出；它不等于物理屏幕 FPS 或触控事件延迟。</p>
+        </section>
+  <div class="table-wrap">
+    <table><thead><tr><th>场景</th><th>此前 → 检查点</th></tr></thead><tbody><tr><td>20,000 节点，密集全景平移</td><td>701.74 → 393.37 ms</td></tr><tr><td>20,000 节点，密集全景缩放</td><td>749.26 → 419.81 ms</td></tr><tr><td>10,000 节点，188 个可见，平移</td><td>6.36 → 5.45 ms</td></tr></tbody></table>
+  </div>
+  <p class="caveat">以上是历史优化检查点，不是最终 App Store 构建的性能规格，也不适用于 iOS 测试版。优化仍在继续；有限的检查不足以排除所有间歇性内存增长情况。</p>
+  <p class="doc-back-bottom"><a href="/odenmap/">← 返回 OdenMap</a></p>
+</article>
+</main>
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <p class="rights">© 2026 Jiachen Bao</p>
+    <a class="icp" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" aria-label="工业和信息化部备案">浙ICP备2026100936号</a>
+  </div>
+</footer>
+</body></html>
